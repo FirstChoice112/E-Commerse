@@ -25,3 +25,55 @@
   margin-top: 50px;
   gap: 30px;
 }
+@media screen and (max-width: 1280px) {
+  .New-collections h1 {
+    font-size: 40px;
+  }
+  .New-collections hr {
+    width: 160px;
+    height: 4px;
+  }
+  .collections {
+    gap: 20px;
+    margin-top: 30px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .New-collections h1 {
+    font-size: 30px;
+  }
+  .New-collections hr {
+    width: 120px;
+    height: 3px;
+  }
+
+  .New-collections-item {
+    gap: 15px;
+    margin-top: 20px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .New-collections {
+    gap: 6px;
+  }
+  .New-collections h1 {
+    font-size: 20px;
+  }
+  .New-collections hr {
+    width: 100px;
+  }
+
+  .New-collections-item {
+    gap: 5px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .New-collections-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
