@@ -137,6 +137,10 @@
   .hero-right {
     display: none;
   }
+  .hero-left {
+    padding-left: 80px;
+    margin-bottom: 0px;
+  }
   .hero-left h2 {
     font-size: 18px;
   }

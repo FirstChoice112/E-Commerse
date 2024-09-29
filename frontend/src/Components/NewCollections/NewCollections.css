@@ -48,7 +48,7 @@
     height: 3px;
   }
 
-  .New-collections-item {
+  .collections {
     gap: 15px;
     margin-top: 20px;
   }
@@ -64,14 +64,13 @@
   .New-collections hr {
     width: 100px;
   }
-
-  .New-collections-item {
+  .collections {
     gap: 5px;
   }
 }
 
 @media screen and (max-width: 500px) {
-  .New-collections-item {
+  .collections {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
