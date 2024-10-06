@@ -12,7 +12,7 @@ Currently working on:
 
   - To get the project running locally, follow these steps:
     ```bash
-    git clone https://github.com/your-username/your-repository.git
+    git clone https://github.com/FirstChoice112/E-Commerse.git
     cd your-repository
     npm install
     ```
@@ -63,7 +63,7 @@ Step-by-step instructions to get the project running locally.
 Example:
 
 ```bash
-git clone https://github.com/your-username/your-repository.git
+git clone https://github.com/FirstChoice112/E-Commerse.git
 cd your-repository
 npm install
 ```
