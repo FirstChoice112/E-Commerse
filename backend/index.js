@@ -9,9 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-//Database Connection with mongodb
 mongoose.connect(
-  "mongodb+srv://ecommercedev:01010101@cluster0.raxzz.mongodb.net/e-commerce"
+  "mongodb+srv://ecommercedev:01020304@cluster0.raxzz.mongodb.net/e-commerce?retryWrites=true&w=majority",
+  {
+    tlsInsecure: true,
+  }
 );
 
 //API Creation
@@ -21,7 +23,7 @@ app.get("/", (req, res) => {
 
 //Image Storage Engine
 const storage = multer.diskStorage({
-  destination: "./upload/images",
+  destination: "/upload/images",
   filename: (req, file, cb) => {
     return cb(
       null,
@@ -105,6 +107,69 @@ app.post("/deleteproduct", async (req, res) => {
   await Product.findOneAndDelete({ id: req.body.id });
   console.log("Product Deleted");
   res.json({ success: true, name: req.body.name });
+});
+
+//Schema creating for User model
+const Users = mongoose.model("Users", {
+  name: {
+    type: String,
+  },
+  email: {
+    type: String,
+    unique: true,
+  },
+  password: {
+    type: String,
+  },
+  cartData: { type: Object },
+  date: { type: Date, default: Date.now },
+});
+
+//Creating Endpoint for registering the user
+app.post("/signup", async (req, res) => {
+  let check = await Users.findOne({ email: req.body.email });
+  if (check) {
+    return res.status(400).json({
+      success: false,
+      errors: "existing user found with the same email adress",
+    });
+  }
+  let cart = {};
+  for (let i = 0; i < 300; i++) {
+    cart[i] = 0;
+  }
+  const user = new Users({
+    name: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    cartData: cart,
+  });
+
+  await user.save();
+
+  const data = { user: { id: user.id } };
+
+  const token = jwt.sign(data, "secret_ecom");
+  res.json({ success: true, token });
+});
+
+//Creating endpoint for user-login
+app.post("/login", async (req, res) => {
+  let user = await Users.findOne({ email: req.body.email });
+  if (user) {
+    const passCompare = req.body.password === user.password;
+    if (passCompare) {
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+      const token = jwt.sign(data, "secret_ecom");
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false, errors: "Wrong Password 🥲" });
+    }
+  }
 });
 
 //Creating API for getting all products
