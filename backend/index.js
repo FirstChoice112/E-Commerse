@@ -3,18 +3,17 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import path from "path";
-import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+const MONGO_URI = process.env.MONGO_URI;
+
 const port = 4000;
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(
-  "mongodb+srv://ecommercedev:01020304@cluster0.raxzz.mongodb.net/e-commerce?retryWrites=true&w=majority",
-  {
-    tlsInsecure: true,
-  }
-);
+mongoose.connect(MONGO_URI, {});
 
 //API Creation
 app.get("/", (req, res) => {
