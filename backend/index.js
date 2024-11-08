@@ -1,12 +1,15 @@
+import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import path from "path";
 import dotenv from "dotenv";
+import { verifyToken } from "./jwtMiddleware.js";
 
 dotenv.config();
 const MONGO_URI = process.env.MONGO_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const port = 4000;
 const app = express();
@@ -133,6 +136,10 @@ app.post("/signup", async (req, res) => {
       errors: "existing user found with the same email adress",
     });
   }
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
   let cart = {};
   for (let i = 0; i < 300; i++) {
     cart[i] = 0;
@@ -140,7 +147,7 @@ app.post("/signup", async (req, res) => {
   const user = new Users({
     name: req.body.username,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword,
     cartData: cart,
   });
 
@@ -148,7 +155,7 @@ app.post("/signup", async (req, res) => {
 
   const data = { user: { id: user.id } };
 
-  const token = jwt.sign(data, "secret_ecom");
+  const token = jwt.sign(data, JWT_SECRET);
   res.json({ success: true, token });
 });
 
@@ -156,23 +163,21 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
   let user = await Users.findOne({ email: req.body.email });
   if (user) {
-    const passCompare = req.body.password === user.password;
+    const passCompare = await bcrypt.compare(req.body.password, user.password);
     if (passCompare) {
-      const data = {
-        user: {
-          id: user.id,
-        },
-      };
-      const token = jwt.sign(data, "secret_ecom");
+      const data = { user: { id: user.id } };
+      const token = jwt.sign(data, JWT_SECRET);
       res.json({ success: true, token });
     } else {
       res.json({ success: false, errors: "Wrong Password 🥲" });
     }
+  } else {
+    res.json({ success: false, errors: "User not found" });
   }
 });
 
 //Creating API for getting all products
-app.get("/allproducts", async (req, res) => {
+app.get("/allproducts", verifyToken, async (req, res) => {
   let products = await Product.find({});
   console.log("All products fetched");
   res.send(products);
