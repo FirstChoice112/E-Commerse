@@ -1,3 +1,41 @@
+/**
+ * Addproduct Component
+ *
+ * En React-komponent för att lägga till en ny produkt genom att skicka produktinformation och en bild
+ * till backend. Komponentens syfte är att ge användaren möjlighet att fylla i produktens namn, kategori,
+ * pris, erbjudandepris och ladda upp en bild. Produktinformationen skickas till backend för vidare bearbetning
+ * och lagring i databasen.
+ *
+ * State:
+ * - image: Lagrar den uppladdade bilden som en fil.
+ * - productDetails: Objekt som innehåller produktens namn, bild-URL, kategori, nypris och gammalpris.
+ *
+ * Funktioner:
+ * - imageHandler: Hanterar bilduppladdning och lagrar den uppladdade filen i state.
+ * - changeHandler: Uppdaterar `productDetails` state när användaren skriver i inputfält eller ändrar kategori.
+ * - Add_product: Asynkron funktion som hanterar API-anrop för att först ladda upp bilden och sedan skicka
+ *   produktinformationen till backend. Om bilduppladdningen lyckas, läggs produktens URL till i `productDetails`
+ *   och skickas sedan vidare för att skapa produkten i backend.
+ *
+ * Returnerar:
+ * - Ett formulär där användaren kan ange produktinformation (namn, pris, kategori, erbjudandepris) och ladda upp en bild.
+ * - En knapp för att skicka formuläret som kallar på funktionen `Add_product`.
+ *
+ * FÖRBÄTTRING:
+ * 1. **Felsökning och användarfeedback**:
+ *    - Lägg till bättre felhantering för att visa felmeddelanden om API-anropen misslyckas eller om fält saknas.
+ * 2. **Formulärvalidering**:
+ *    - Inför enkel validering, t.ex. att inga fält är tomma, innan `Add_product` anropas.
+ * 3. **Återställ formuläret efter skickning**:
+ *    - Återställ alla state-variabler (`productDetails` och `image`) efter att produkten har lagts till.
+ * 4. **Bättre tillståndshantering**:
+ *    - Använd React Hook Form eller liknande bibliotek för hantering och validering av formulärfält.
+ * 5. **Förbättrad UI/UX**:
+ *    - Lägg till laddningsindikator på knappen under API-anropet för bättre användarupplevelse.
+ * 6. **Optimering av bilduppladdning**:
+ *    - Gör bilduppladdningen valfri eller tillåt förhandsvisning innan bild skickas till backend.
+ */
+
 import "./AddProduct.css";
 import upload_area from "../../assets/upload_area.svg";
 import { useState } from "react";
@@ -51,14 +89,14 @@ const Addproduct = () => {
         },
         body: JSON.stringify(product),
 
-
         //* arrow function
-        
-      })then((res)=<res.json()).then((data)=<{
-        data.success?alert("Product Added"):alert("Failed")
-      })                  
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          data.success ? alert("Product Added") : alert("Failed");
+        });
     }
-  };  
+  };
 
   return (
     <div className="add-product">
@@ -76,7 +114,7 @@ const Addproduct = () => {
         <div className="addproduct-itemfield">
           <p>Price</p>
           <input
-            value={setProductDetails.old_price}
+            value={productDetails.old_price}
             onChange={changeHandler}
             type="text"
             name="old_price"
@@ -86,7 +124,7 @@ const Addproduct = () => {
         <div className="addproduct-itemfield">
           <p>Offer Price</p>
           <input
-            value={setProductDetails.new_price}
+            value={productDetails.new_price}
             onChange={changeHandler}
             type="text"
             name="new_price"
@@ -96,7 +134,12 @@ const Addproduct = () => {
       </div>
       <div className="addproduct-itemfield">
         <p>Product Category</p>
-        <select name="category" className="add-product-selector">
+        <select
+          name="category"
+          className="add-product-selector"
+          value={productDetails.category}
+          onChange={changeHandler}
+        >
           <option value="women">Women</option>
           <option value="men">Men</option>
           <option value="kid">Kid</option>
