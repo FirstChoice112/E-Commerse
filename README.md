@@ -1,5 +1,10 @@
 # Admin Panel - MERN Project
 
+## Project Management
+
+[![Trello](https://img.shields.io/badge/Trello-Board-0079BF?style=for-the-badge&logo=trello&logoColor=white)](https://trello.com/your-board-link)
+s
+
 ## Overview
 
 This is the Admin panel for our fullstack MERN project. The Admin panel is built with **React** and is used for managing product administration within the webshop. It includes features such as adding new products, displaying a list of products, and handling product deletions. The application uses **React Router** for navigation between different views and **Vite** as the development server.
