@@ -272,7 +272,8 @@ app.post("/signup", async (req, res) => {
 
 /*
 Vad endpointen gör
-Tar emot en POST-begäran med användarens inloggningsinformation (email, password).
+Tar emot en POST-begäran med användarens inloggningsinformation (email, password).vc
+  
 Hämtar användaren från databasen baserat på den angivna e-postadressen.
 Om användaren finns:
 Jämför det angivna lösenordet med det lagrade hashade lösenordet med hjälp av bcrypt.compare.
