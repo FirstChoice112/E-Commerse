@@ -2,6 +2,42 @@ import React from "react";
 import "./LoginSignup.css";
 import { useState } from "react";
 
+/**
+ * Denna komponent hanterar inloggning och registrering av användare för applikationen.
+ * Den låter användare välja mellan att logga in eller registrera ett nytt konto.
+ *
+ * Funktionalitet:
+ * - useState används för att hantera:
+ *   - state: Håller reda på om användaren är i "Login"- eller "Sign Up"-läge.
+ *   - formData: Objekt som innehåller användarens input för användarnamn, e-postadress och lösenord.
+ * - Metoder för inloggning och registrering:
+ *   - login: Skickar en POST-förfrågan till servern för att logga in användaren och spara en autentiseringstoken i localStorage om inloggningen lyckas.
+ *   - signup: Skickar en POST-förfrågan till servern för att skapa ett nytt konto och spara en autentiseringstoken i localStorage om registreringen lyckas.
+ * - En funktion för att hantera förändringar i formulärfälten (`changeHandler`).
+ * - Dynamisk rendering av inloggnings- och registreringsformulär beroende på `state`.
+ *
+ * Importerar:
+ * - useState: Används för att hantera lokalt tillstånd för formulärdata och visningsläge.
+ * - fetch: Används för att skicka API-anrop för inloggning och registrering.
+ *
+ * Returnerar:
+ * - Ett formulär där användaren kan logga in eller registrera sig beroende på vilket läge som är aktivt.
+ * - En knapp som antingen kör `login` eller `signup` beroende på läget.
+ * - Länkar för att växla mellan inloggning och registrering.
+ *
+ * FÖRBÄTTRING:
+ * 1. **Felhantering vid API-anrop**:
+ *    - Lägg till felhantering för alla fetch-anrop för att hantera potentiella nätverksfel eller serverfel, t.ex. genom att använda try-catch eller kolla om `response.ok` är true innan vidare bearbetning.
+ * 2. **Förbättrad användartillförlitlighet**:
+ *    - Lägg till fältvalidering på användarnamn, e-postadress och lösenord innan API-anropet görs, för att ge en bättre användarupplevelse och säkerställa att data är korrekt.
+ * 3. **Förbättrad säkerhet**:
+ *    - Förbättra säkerheten genom att lagra och använda auth-token på ett säkrare sätt, t.ex. i HttpOnly-cookies istället för localStorage, för att minska risken för XSS-attacker.
+ * 4. **Användarfeedback**:
+ *    - Lägg till användarfeedback, såsom en laddningsindikator eller meddelande, när API-anrop görs för att förbättra användarupplevelsen.
+ * 5. **Prestandaoptimering**:
+ *    - Förbättra prestanda genom att minimera onödiga omrenderingar genom att optimera användningen av useState och useEffect.
+ */
+
 const LoginSignup = () => {
   const [state, setState] = useState("Login");
   const [formData, setFormData] = useState({
