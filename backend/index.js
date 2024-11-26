@@ -1,10 +1,11 @@
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import multer from "multer";
-import path from "path";
-import dotenv from "dotenv";
 import { verifyToken } from "./jwtMiddleware.js";
 
 /*
@@ -53,7 +54,9 @@ Testning:
 Implementera enhetstester för att säkerställa att varje funktion fungerar som förväntat och att inga regressionsfel introduceras i koden.
  */
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -325,7 +328,7 @@ Undvik att logga varje förfrågan i konsolen om inte felsökning krävs.
 */
 
 //Creating API for getting all products
-app.get("/allproducts", verifyToken, async (req, res) => {
+app.get("/allproducts", async (req, res) => {
   let products = await Product.find({});
   console.log("All products fetched");
   res.send(products);
@@ -341,7 +344,8 @@ Lägg till felhantering för att hantera eventuella databasfel.
 */
 
 //Creating endpoint for newcollection data
-app.get(`/newcollection`, async (req, res) => {
+
+app.get(`/newcollections`, async (req, res) => {
   let products = await Product.find({});
   let newcollection = products.slice(1).slice(-8);
   console.log("New collection fetched");
@@ -356,7 +360,6 @@ Returnerar de första 4 produkterna från resultatet.
 Använd sortering eller taggar för att bättre definiera "populära" produkter istället för att returnera de första fyra.
 Optimera databasfrågan för att inkludera endast relevanta datafält om så behövs.
 */
-
 //Creating endpoint for popular in women section
 app.get(`/popularinwoman`, async (req, res) => {
   let products = await Product.find({ category: "women" });

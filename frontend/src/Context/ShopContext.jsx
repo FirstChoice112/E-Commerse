@@ -53,28 +53,54 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCard());
 
   useEffect(() => {
-    fetch("http://localhost:4000/allproducts")
-      .then((res) => res.json())
-      .then((data) => {
-        setAll_product(data);
-      });
+    const fetchAllProducts = async () => {
+      try {
+        const token = localStorage.getItem("auth-token");
+        const response = await fetch("http://localhost:4000/allproducts", {
+          headers: {
+            "auth-token": token || "", // Lägg till token i headern om den finns
+          },
+        });
 
-    if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/getcart", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: "",
-      })
-        .then((res) => res.json())
-        .then((data) => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setAll_product(data);
+      } catch (err) {
+        console.error("Error fetching all products:", err);
+      }
+    };
+
+    const fetchCart = async () => {
+      const token = localStorage.getItem("auth-token");
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:4000/getcart", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "auth-token": token,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch cart: ${response.status}`);
+          }
+
+          const data = await response.json();
           console.log(data);
           setCartItems(data);
-        });
-    }
+        } catch (err) {
+          console.error("Error fetching cart:", err);
+        }
+      }
+    };
+
+    fetchAllProducts();
+    fetchCart();
   }, []);
 
   const addToCart = (itemId) => {
