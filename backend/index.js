@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { verifyToken } from "./jwtMiddleware.js";
+import bcrypt from "bcrypt";
 
 /*
  *För bättre organisation kan du dela upp din kod i separata filer, till exempel:
