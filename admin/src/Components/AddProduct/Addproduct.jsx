@@ -88,8 +88,6 @@ const Addproduct = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(product),
-
-        //* arrow function
       })
         .then((res) => res.json())
         .then((data) => {
