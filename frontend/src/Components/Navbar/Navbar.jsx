@@ -118,7 +118,7 @@ export const Navbar = () => {
       <div className="nav-login-cart">
         {localStorage.getItem("auth-token") ? (
           <button
-            onclick={() => {
+            onClick={() => {
               localStorage.removeItem("auth-token");
               window.location.replace(`/`);
             }}
